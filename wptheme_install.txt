@@ -1,0 +1,47 @@
+ https://codex.wordpress.org/Using_Themes
+ create a directory to save your Theme in the wp-content/themes directory provided by WordPress. 
+ For example, a Theme named Test should be in wp-content/themes/test.
+ 
+ Selecting the Active Theme
+To select a Theme for your site:
+
+Log in to the WordPress Administration Panels.
+Select the Appearance panel, then Themes.
+From the Themes panel, roll over the Theme thumbnail image for the Theme you are interested in to see options for that theme.
+You can view more information about any theme by clicking Theme Details.
+A live preview of any Theme (using your blog's content) can be seen by clicking Live Preview.
+To activate the Theme click the Activate button.
+
+//===
+https://downloads.wordpress.org/theme/awaken.2.0.6.zip
+
+http://themezhut.com/themes/awaken/
+
+
+get_template_directory_uri()
+https://developer.wordpress.org/reference/functions/get_template_directory_uri/
+
+
+//=== https://www.elegantthemes.com/blog/tips-tricks/how-to-customize-the-wordpress-login-page
+The easiest way to make changes to the WordPress login page is 
+to add some code directly to your active theme. 
+Most of this code will live in the functions.php file.
+
+
+//=== http://www.wpbeginner.com/beginners-guide/checklist-15-things-you-must-do-before-changing-wordpress-themes/
+* to make sure that your new theme is widget-ready
+
+Sidebar widgets are really easy to use therefore a lot of users use it to customize it. 
+We notice that sidebars are probably the most user-customized area of WordPress sites. 
+People make tons of changes such as adding custom texts, images, links, advertisement,
+and other widgets.
+
+If you are using a widget-enabled theme, 
+and you switch to a theme that is not widget-ready, then you will lose all of that. 
+
+
+* to add the tracking codes, some of us open the footer.php file and modify the codes. 
+Some of our themes have a spot to place the adsense code. Whichever one is your case, 
+you want to make sure that you copy and paste your tracking code to your new theme
+
+http://www.wpbeginner.com/beginners-guide/checklist-15-things-you-must-do-before-changing-wordpress-themes/
