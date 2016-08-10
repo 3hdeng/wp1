@@ -64,22 +64,34 @@ Updated on 26 August 2014
 
     <div id="tabs-2">
         <button id="show_gpicker"  type="button">show files dialog</button>
-  
+      
         <dialog id="gpickerDialog">  
+          <script src="<?php echo  plugin_dir_url(__FILE__) ?>/js/my_gpicker.js?<?php echo time(); ?>"></script>
+           <script src="https://apis.google.com/js/api.js"></script>
+           
                  <h3>Sample Dialog!</h3>  
                  <div id="result"></div>
+                   <!-- ajax post action -->
+                   <form id="frmMappingFile" name="frmMappingFile" method="post">
+          <?php $mappingFileNonce = wp_create_nonce( "mapping-file-nonce" ); ?>
+          <input type="hidden" name="mapping-file-nonce" id="mapping-file-nonce" value="<?php echo $mappingFileNonce ?>">
+          <input type="text" id="fileUrls" name="fileUrls" value="" />
+          <button id="btnSaveMappingFile">SaveMappingFiles</button>
+                   </form>
+                   
                  <button id="exit_gpicker">Close Dialog</button>   
            </dialog>  
-           <script src="<?php echo  plugin_dir_url(__FILE__) ?>/js/my_gpicker.js"></script>
-           <script src="https://apis.google.com/js/api.js?onload=onGapiLoad"></script>
+         
  <script>
     //wp_enqueue_script('my_gpicker',  plugin_dir_url(__FILE__)."js/my_gpicker.js");
-    //wp_enqueue_script('my_gapi', "https://apis.google.com/js/api.js"); //?onload=onApiLoad");
+    //wp_enqueue_script('my_gapi', "https://apis.google.com/js/api.js"); 
+    //?onload=onApiLoad");
+    //?onload=onGapiLoad
  
      (function() {  
     var dialog = document.getElementById('gpickerDialog');  
     document.getElementById('show_gpicker').onclick = function() {  
-        //onGapiLoad();
+        onGapiLoad();
         dialog.show();  
     };  
     document.getElementById('exit_gpicker').onclick = function() {  

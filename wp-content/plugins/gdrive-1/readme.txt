@@ -1,3 +1,7 @@
+//=== type="button" to prevent submit
+<button id="show_gpicker"  type="button">show files dialog</button>
+
+
 === Google Drive Media Library ===
 Contributors: felixwei
 Donate link: http://felixweiphotography.com/

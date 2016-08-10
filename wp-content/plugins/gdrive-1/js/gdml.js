@@ -26,22 +26,20 @@ jQuery(document).ready(function($)
     {
         // Show loading animation image
         $('#btnSaveMappingFile').button('disable');
-        $('#imgLoadingButton').fadeIn();
+        //$('#imgLoadingButton').fadeIn();
         $('#info').fadeOut();
 
         // Declare data
         var data = {
             action: 'gdml_action',
-            mappingFileName: $("#mappingFileName").val(),
-            mappingFileDescription: $("#mappingFileDescription").val(),
-            mappingFileNonce: $("#mapping-file-nonce").val()
+             mappingFileNonce: $("#mapping-file-nonce").val()
         };
 
         $.post(ajaxurl, data, function(msg)
         {
             // Hide loading animation image
             $('#btnSaveMappingFile').button('enable');
-            $('#imgLoadingButton').fadeOut();
+            //$('#imgLoadingButton').fadeOut();
             $('#info').html(msg);
             $('#info').fadeIn();
         });

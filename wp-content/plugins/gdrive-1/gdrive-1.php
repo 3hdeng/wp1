@@ -90,7 +90,14 @@ add_action('admin_menu', 'gdml_media_actions');
 
 function gdml_ajax_post()
 {
-    if(isset($_POST['mappingFolderNonce']))
+    //echo "enter gdml_ajax_post()";
+    $logfname=$currentPath."/mylog.txt";
+    $logfile=fopen($logfname, "a+"); 
+    fwrite($logfile, "//===".PHP_EOL);
+    fwrite($logfile, "enter gdml_ajax_post()".PHP_EOL); 
+  
+    
+    /*if(isset($_POST['mappingFolderNonce']))
     {
         $GDMLWebService = new GDMLWeb();
         $message = $GDMLWebService->gdml_saveMappingFolder($_POST['mappingFolder'], 
@@ -101,12 +108,16 @@ function gdml_ajax_post()
     if(isset($_POST['mappingFileNonce']))
     {
         $GDMLWebService = new GDMLWeb();
-        $folder = get_option('gdml_mapping_folder');
-        $message = $GDMLWebService->gdml_saveMappingFile($_POST['mappingFileName'], $folder, $_POST['mappingFileDescription'],
+        //$folder = get_option('gdml_mapping_folder');
+        $urls=json_decode( $_POST['fileUrls'] );
+        fwrite($logfile, $_POST['fileUrls'].PHP_EOL); 
+        fclose($logfile);   
+        $message = $GDMLWebService->gdml_saveMappingFile($urls,
             $_POST['mappingFileNonce'], 'mapping-file-nonce');
         echo $message;
-    }
-
+        //fwrite($logfile, $message.PHP_EOL); 
+    }*/
+    if($logfile) fclose($logfile);
     die();
 }
 

@@ -65,7 +65,12 @@
             urls.push(doc[google.picker.Document.URL]);
           }
         }
-        var message = 'You picked: ' + urls.join('<br/>');
-        document.getElementById('result').innerHTML = message;
+        var message = 'You picked: <br/> what\'s wrong <br/>' + urls.join('<br/>');
+      
+        var elem= document.getElementById('fileUrls');
+         elem.value = JSON.stringify(urls);
+         //alert(elem.value);
+          
+        document.getElementById('result').innerHTML = message; 
       }
 

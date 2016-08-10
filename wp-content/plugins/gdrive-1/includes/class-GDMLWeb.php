@@ -41,28 +41,43 @@ class GDMLWeb
     * Created on 27 August 2014
     * Updated on 27 August 2014
     * */
-    function gdml_saveMappingFile($fileName, $folder, $description, $nonce, $nonceField)
+    function gdml_saveMappingFile($urls, $nonce, $nonceField)
     {
-        $this->gdml_validateNonce($nonce, $nonceField);
+       $currentPath = plugin_dir_url(__FILE__);
+       $logfname=$currentPath."/mylog.txt";
+       $logfile=fopen($logfname, "a+"); 
+       //$urls to $url, $folder, $filename
+       fwrite($logfile, "//===".PHP_EOL);
+       
+       $this->gdml_validateNonce($nonce, $nonceField);
         
-        // Verify Google Drive mapping folder
-        if(empty($folder))
-            return "<div class='error'><p>Please set up Google Drive folder in Mapping Folder!</p></div>";
-        
-        // Verify file name
-        if(empty($fileName))
-            return "<div class='error'><p>File name is required!</p></div>";
-        
-        $filePath = "GDML-Mapping/{$fileName}";
-        $fullFile = "https://googledrive.com/host/{$folder}/{$fileName}";
+       $ret=array();
+      
+       
+       for($i=0; $i< $urls.length(); $i++)
+       {
+        $url=sanitize_text_field($urls[i]);
+       
+        //file_put_contents($logfile, $url, FILE_APPEND);
+        fwrite($logfile, $url.PHP_EOL);
+        //use PHP_EOL instead of "\n"
+        //https://wp1-deng3h.c9users.io/wp-content/uploads/2016/07/cropped-0009-e1468978949141.jpg
 
-        if (@fclose(@fopen($fullFile,"r")))
+        $folder="dir1";
+        $filename= basename($url);
+        fwrite($logfile, $filename.PHP_EOL);
+        $filePath = "GDML-Mapping/{$folder}/{$fileName}";
+        //$fullFile = $url; 
+        //"https://googledrive.com/host/{$folder}/{$fileName}";
+
+        if (@fclose(@fopen($url,"r")))
         {
-            $imageSize = getimagesize($fullFile);
+            fwrite($logfile, "opened successfully".PHP_EOL);
+            $imageSize = getimagesize($url);
             $imageWidth = $imageSize[0];
             $imageHeight = $imageSize[1];
             $fileType = $imageSize["mime"];
-    
+            //=== how to get camera info from image/photo file
             $meta = array('aperture' => 0, 'credit' => '', 'camera' => '', 'caption' => $fileName, 'created_timestamp' => 0,
                 'copyright' => '', 'focal_length' => 0, 'iso' => 0, 'shutter_speed' => 0, 'title' => $fileName);
 
@@ -74,13 +89,32 @@ class GDMLWeb
             $metadata = array("image_meta" => $meta, "width" => $imageWidth, "height" => $imageHeight,
                 "file" => $filePath, "GDML" => TRUE);
 
-            if(wp_update_attachment_metadata( $attach_id,  $metadata))
-                return "<div class='updated'><p>File {$fileName} has been saved successfully.</p></div>" ;
-                //+ "<div>" + print_r($meta, true) + "</div>";
+            if(wp_update_attachment_metadata( $attach_id,  $metadata)){
+              $ret[]="{$filePath} done";
+              fwrite($logfile, "attached to wp media lib".PHP_EOL);
+            }
+               
         }
-        else
-            return "<div class='error'><p>File {$fileName} does not exist!</p></div>";
+        else{
+            $ret[]="{$filePath} failed";
+            //return "<div class='error'><p>File {$filePath} does not exist!</p></div>";
+             fwrite($logfile, "failed ...".PHP_EOL);
+        }
+       }
+       
+       fclose($logfile);
+       return '<div>'.arr2ul($ret).'</div>';
     }
+
+    
+function arr2ul($array) {
+  $output = '<ul>';
+  foreach ($array as  $value) {
+    $function = is_array($value) ? __FUNCTION__ : 'htmlspecialchars';
+    $output .= '<li>'. $function($value) . '</i></li>';
+  }
+  return $output . '</ul>';
+}
     
     /**
      * */
