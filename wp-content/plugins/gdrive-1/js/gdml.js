@@ -22,31 +22,49 @@ jQuery(document).ready(function($)
      * */
     $('#btnSaveMappingFile, #btnSaveMappingFolder').button();
 
-    $('#btnSaveMappingFile').click(function()
+    var ajaxData;
+    function setPostData(urls){
+        var data = {
+            action: 'gdml_action',
+             mappingFileNonce: $("#mapping-file-nonce").val(),
+             fileUrls: urls
+        };
+        ajaxData= data; //JSON.stringify(data);
+    }
+    
+    $('#btnSaveMappingFile').click(btnClick_saveMappingFile);
+    
+    function btnClick_saveMappingFile()
     {
         // Show loading animation image
         $('#btnSaveMappingFile').button('disable');
         //$('#imgLoadingButton').fadeIn();
         $('#info').fadeOut();
 
-        // Declare data
-        var data = {
-            action: 'gdml_action',
-             mappingFileNonce: $("#mapping-file-nonce").val()
-        };
+        console.log("btnSaveMappingFile clicked");
+        console.log(ajaxurl);
+       
 
-        $.post(ajaxurl, data, function(msg)
+        //xxx var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
+        $.post(ajaxurl, ajaxData, function(msg)
         {
             // Hide loading animation image
             $('#btnSaveMappingFile').button('enable');
             //$('#imgLoadingButton').fadeOut();
             $('#info').html(msg);
             $('#info').fadeIn();
-        });
+            console.log(msg);
+        }).fail(function() {
+    alert( "error , btnSaveMappingFile" );
+  })
+  .always(function() {
+    alert( "finished" );
+});
         return false;
         
-    }); // end of button
-
+    } 
+    
+//================
     $('#btnSaveMappingFolder').click(function()
     {
         // Show loading animation image

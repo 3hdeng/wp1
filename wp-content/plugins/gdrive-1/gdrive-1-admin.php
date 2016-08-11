@@ -76,7 +76,7 @@ Updated on 26 August 2014
           <?php $mappingFileNonce = wp_create_nonce( "mapping-file-nonce" ); ?>
           <input type="hidden" name="mapping-file-nonce" id="mapping-file-nonce" value="<?php echo $mappingFileNonce ?>">
           <input type="text" id="fileUrls" name="fileUrls" value="" />
-          <button id="btnSaveMappingFile">SaveMappingFiles</button>
+          <button id="btnSaveMappingFile" type="button">SaveMappingFiles</button>
                    </form>
                    
                  <button id="exit_gpicker">Close Dialog</button>   
@@ -92,7 +92,7 @@ Updated on 26 August 2014
     var dialog = document.getElementById('gpickerDialog');  
     document.getElementById('show_gpicker').onclick = function() {  
         onGapiLoad();
-        dialog.show();  
+        //dialog.show();  
     };  
     document.getElementById('exit_gpicker').onclick = function() {  
         dialog.close();  

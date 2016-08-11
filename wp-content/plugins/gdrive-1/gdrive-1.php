@@ -25,10 +25,10 @@ add_filter('wp_get_attachment_url', 'gdml_getMediaURLFile');
 function gdml_getMediaURLFile($url)
 {
     $folder = get_option('gdml_mapping_folder');
-    $directory = wp_upload_dir();
+    $arr = wp_upload_dir();
     
     if(strpos($url, 'GDML-Mapping/'))
-    	$url = str_replace($directory['baseurl'] . '/GDML-Mapping/', 'https://googledrive.com/host/' . $folder . '/', $url);
+    	$url = str_replace($arr['baseurl'] . '/GDML-Mapping/', 'https://googledrive.com/host/' . $folder . '/', $url);
 
     return $url;
     //$url will be 'https://googledrive.com/host/' . $folder . '/''
@@ -47,6 +47,7 @@ function gdml_adminScript()
     wp_enqueue_script('jquery-ui-dialog');
     wp_enqueue_script('jquery-ui-tooltip');
     wp_enqueue_script('jquery-ui-tabs');
+    //var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ';
     wp_enqueue_script('gdml-javascript',  plugin_dir_url(__FILE__)."js/gdml.js");
     //wp_enqueue_script('my_gpicker',  plugin_dir_url(__FILE__)."js/my_gpicker.js");
     //wp_enqueue_script('my_gapi', "https://apis.google.com/js/api.js"); //?onload=onApiLoad");
@@ -88,14 +89,21 @@ add_action('admin_menu', 'gdml_media_actions');
  * Updated on 26 August 2014
  * */
 
-function gdml_ajax_post()
+function gdml_ajax_cb()
 {
-    //echo "enter gdml_ajax_post()";
-    $logfname=$currentPath."/mylog.txt";
+    //echo "enter gdml_ajax_post(), ";
+    $logfname= wp_upload_dir()["path"]."/mylog.txt";
+    echo $logfname. " , ";
+    
+    try{
     $logfile=fopen($logfname, "a+"); 
     fwrite($logfile, "//===".PHP_EOL);
     fwrite($logfile, "enter gdml_ajax_post()".PHP_EOL); 
-  
+    }catch (Exception $e) {
+        echo 'Caught exception: ',  $e->getMessage(), "\n";
+        echo "sth wrong when open $logfname !";
+    }
+    
     
     /*if(isset($_POST['mappingFolderNonce']))
     {
@@ -103,22 +111,41 @@ function gdml_ajax_post()
         $message = $GDMLWebService->gdml_saveMappingFolder($_POST['mappingFolder'], 
             $_POST['mappingFolderNonce'], 'mapping-folder-nonce');
         echo $message;
-    }
+    }*/
 
     if(isset($_POST['mappingFileNonce']))
     {
         $GDMLWebService = new GDMLWeb();
         //$folder = get_option('gdml_mapping_folder');
-        $urls=json_decode( $_POST['fileUrls'] );
+        $urls=json_decode($_POST['fileUrls'] );
+        if($urls==null) {
+            fwrite($logfile, json_last_error_msg().PHP_EOL);
+            $tmp=$_POST['fileUrls'];
+            if(get_magic_quotes_gpc()){
+              $tmp = stripslashes($tmp);
+              }
+            $tmp = trim($tmp);
+
+
+            $urls = json_decode(html_entity_decode($tmp),true);
+            //$urls=json_decode(html_entity_decode($_POST['fileUrls']));
+             if($urls==null)    fwrite($logfile, json_last_error_msg().PHP_EOL);
+        }
+        
+        fwrite($logfile, gettype($urls).PHP_EOL);
         fwrite($logfile, $_POST['fileUrls'].PHP_EOL); 
-        fclose($logfile);   
+        for($i=0; $i< count($urls); $i++){
+            $urls[$i]=urldecode($urls[$i]);
+            fwrite($logfile, $urls[$i].PHP_EOL); 
+        }  
         $message = $GDMLWebService->gdml_saveMappingFile($urls,
             $_POST['mappingFileNonce'], 'mapping-file-nonce');
-        echo $message;
-        //fwrite($logfile, $message.PHP_EOL); 
-    }*/
+        //echo $message;
+        fwrite($logfile, $message.PHP_EOL); 
+    }
     if($logfile) fclose($logfile);
-    die();
+    echo "gdml_ajax_cb done, where is logfile?";
+    wp_die();
 }
 
-add_action('wp_ajax_gdml_action', 'gdml_ajax_post');
+add_action('wp_ajax_gdml_action', 'gdml_ajax_cb');

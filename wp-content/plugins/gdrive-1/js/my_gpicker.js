@@ -62,7 +62,7 @@
           var arr=data[google.picker.Response.DOCUMENTS];
           for(i=0; i<arr.length; i++ ){
             doc = arr[i];
-            urls.push(doc[google.picker.Document.URL]);
+            urls.push(encodeURIComponent(doc[google.picker.Document.URL]));
           }
         }
         var message = 'You picked: <br/> what\'s wrong <br/>' + urls.join('<br/>');
@@ -70,7 +70,9 @@
         var elem= document.getElementById('fileUrls');
          elem.value = JSON.stringify(urls);
          //alert(elem.value);
-          
+        setPostData(urls);
+        
         document.getElementById('result').innerHTML = message; 
+        document.getElementById('gpickerDialog').show();   
       }
 

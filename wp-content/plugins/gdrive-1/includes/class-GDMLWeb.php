@@ -43,67 +43,32 @@ class GDMLWeb
     * */
     function gdml_saveMappingFile($urls, $nonce, $nonceField)
     {
-       $currentPath = plugin_dir_url(__FILE__);
-       $logfname=$currentPath."/mylog.txt";
+        try{
+       //$currentPath = plugin_dir_url(__FILE__);
+       $logfname=wp_upload_dir()["path"]."/mylog2.txt";
        $logfile=fopen($logfname, "a+"); 
        //$urls to $url, $folder, $filename
-       fwrite($logfile, "//===".PHP_EOL);
-       
-       $this->gdml_validateNonce($nonce, $nonceField);
-        
-       $ret=array();
-      
-       
-       for($i=0; $i< $urls.length(); $i++)
+       fwrite($logfile, "//=== {$logfname} , gdml_saveMappingFile()".PHP_EOL);
+        fwrite($logfile, gettype($urls).PHP_EOL);
+         fwrite($logfile,$nonce.PHP_EOL);
+         fwrite($logfile,$nonceField.PHP_EOL); 
+         
+       for($i=0; $i< count($urls); $i++)
        {
-        $url=sanitize_text_field($urls[i]);
-       
-        //file_put_contents($logfile, $url, FILE_APPEND);
+        $url=$urls[$i];
         fwrite($logfile, $url.PHP_EOL);
-        //use PHP_EOL instead of "\n"
-        //https://wp1-deng3h.c9users.io/wp-content/uploads/2016/07/cropped-0009-e1468978949141.jpg
-
-        $folder="dir1";
-        $filename= basename($url);
-        fwrite($logfile, $filename.PHP_EOL);
-        $filePath = "GDML-Mapping/{$folder}/{$fileName}";
-        //$fullFile = $url; 
-        //"https://googledrive.com/host/{$folder}/{$fileName}";
-
-        if (@fclose(@fopen($url,"r")))
-        {
-            fwrite($logfile, "opened successfully".PHP_EOL);
-            $imageSize = getimagesize($url);
-            $imageWidth = $imageSize[0];
-            $imageHeight = $imageSize[1];
-            $fileType = $imageSize["mime"];
-            //=== how to get camera info from image/photo file
-            $meta = array('aperture' => 0, 'credit' => '', 'camera' => '', 'caption' => $fileName, 'created_timestamp' => 0,
-                'copyright' => '', 'focal_length' => 0, 'iso' => 0, 'shutter_speed' => 0, 'title' => $fileName);
-
-            $attachment = array('post_mime_type' => $fileType, 'guid' => $filePath,
-                'post_parent' => 0,	'post_title' => $fileName, 'post_content' => $description);
-
-            $attach_id = wp_insert_attachment($attachment, $filePath, 0);
-    
-            $metadata = array("image_meta" => $meta, "width" => $imageWidth, "height" => $imageHeight,
-                "file" => $filePath, "GDML" => TRUE);
-
-            if(wp_update_attachment_metadata( $attach_id,  $metadata)){
-              $ret[]="{$filePath} done";
-              fwrite($logfile, "attached to wp media lib".PHP_EOL);
-            }
-               
-        }
-        else{
-            $ret[]="{$filePath} failed";
-            //return "<div class='error'><p>File {$filePath} does not exist!</p></div>";
-             fwrite($logfile, "failed ...".PHP_EOL);
-        }
        }
-       
+       //$ret=$urls;
        fclose($logfile);
-       return '<div>'.arr2ul($ret).'</div>';
+       //return '<div>'.arr2ul($ret).'</div>';
+       return '<div> i am a pig </div>';
+        } catch(Exception  $e){
+           $msg= $e->getMessage();
+           //echo $msg;
+           return "my error caught ".$msg;
+        }
+        
+        
     }
 
     
