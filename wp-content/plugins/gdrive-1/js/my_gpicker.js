@@ -70,7 +70,7 @@
         var elem= document.getElementById('fileUrls');
          elem.value = JSON.stringify(urls);
          //alert(elem.value);
-        setPostData(urls);
+        my_setPostData(urls);
         
         document.getElementById('result').innerHTML = message; 
         document.getElementById('gpickerDialog').show();   

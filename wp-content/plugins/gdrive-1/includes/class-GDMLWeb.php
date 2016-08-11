@@ -36,6 +36,15 @@ class GDMLWeb
             return "<div class='updated'><p>Google Drive folder has been saved successfully.</p></div>";
     }
     
+        
+static function arr2ul($array) {
+  $output = '<ul>';
+  foreach ($array as  $value) {
+    $function = is_array($value) ? __FUNCTION__ : 'htmlspecialchars';
+    $output .= '<li>'. $function($value) . '</i></li>';
+  }
+  return $output . '</ul>';
+}
     /*
     * Save Mapping File
     * Created on 27 August 2014
@@ -60,8 +69,8 @@ class GDMLWeb
        }
        //$ret=$urls;
        fclose($logfile);
-       //return '<div>'.arr2ul($ret).'</div>';
-       return '<div> i am a pig </div>';
+       return '<div>'.GDMLWeb::arr2ul($urls).'</div>';
+       //return '<div> i am a pig </div>';
         } catch(Exception  $e){
            $msg= $e->getMessage();
            //echo $msg;
@@ -71,15 +80,7 @@ class GDMLWeb
         
     }
 
-    
-function arr2ul($array) {
-  $output = '<ul>';
-  foreach ($array as  $value) {
-    $function = is_array($value) ? __FUNCTION__ : 'htmlspecialchars';
-    $output .= '<li>'. $function($value) . '</i></li>';
-  }
-  return $output . '</ul>';
-}
+
     
     /**
      * */

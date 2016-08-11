@@ -1,3 +1,4 @@
+var my_setPostData;
 jQuery(document).ready(function($)
 {
     /*
@@ -27,10 +28,11 @@ jQuery(document).ready(function($)
         var data = {
             action: 'gdml_action',
              mappingFileNonce: $("#mapping-file-nonce").val(),
-             fileUrls: urls
+             fileUrls: JSON.stringify(urls)
         };
         ajaxData= data; //JSON.stringify(data);
     }
+    my_setPostData=setPostData;
     
     $('#btnSaveMappingFile').click(btnClick_saveMappingFile);
     
@@ -44,7 +46,6 @@ jQuery(document).ready(function($)
         console.log("btnSaveMappingFile clicked");
         console.log(ajaxurl);
        
-
         //xxx var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
         $.post(ajaxurl, ajaxData, function(msg)
         {

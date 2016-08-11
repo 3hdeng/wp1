@@ -117,23 +117,17 @@ function gdml_ajax_cb()
     {
         $GDMLWebService = new GDMLWeb();
         //$folder = get_option('gdml_mapping_folder');
-        $urls=json_decode($_POST['fileUrls'] );
-        if($urls==null) {
-            fwrite($logfile, json_last_error_msg().PHP_EOL);
-            $tmp=$_POST['fileUrls'];
-            if(get_magic_quotes_gpc()){
-              $tmp = stripslashes($tmp);
-              }
-            $tmp = trim($tmp);
-
-
-            $urls = json_decode(html_entity_decode($tmp),true);
-            //$urls=json_decode(html_entity_decode($_POST['fileUrls']));
-             if($urls==null)    fwrite($logfile, json_last_error_msg().PHP_EOL);
-        }
+        fwrite($logfile, $_POST['fileUrls'].PHP_EOL); 
+        $tmp=$_POST['fileUrls'];
+        //if(get_magic_quotes_gpc()){
+        //      $tmp = stripslashes($tmp);
+        //      }
+        //$tmp = trim($tmp);
+        $urls=json_decode(stripslashes($tmp));
+        if($urls==null) fwrite($logfile, json_last_error_msg().PHP_EOL);
         
         fwrite($logfile, gettype($urls).PHP_EOL);
-        fwrite($logfile, $_POST['fileUrls'].PHP_EOL); 
+
         for($i=0; $i< count($urls); $i++){
             $urls[$i]=urldecode($urls[$i]);
             fwrite($logfile, $urls[$i].PHP_EOL); 
