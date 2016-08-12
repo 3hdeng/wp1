@@ -53,6 +53,9 @@ static function arr2ul($array) {
     function gdml_saveMappingFile($urls, $nonce, $nonceField)
     {
         try{
+//=== https://wordpress.org/support/topic/using-getimagesize-in-wordpress
+//=== https://developers.google.com/drive/v3/web/file
+             $this->gdml_validateNonce($nonce, $nonceField);
        //$currentPath = plugin_dir_url(__FILE__);
        $logfname=wp_upload_dir()["path"]."/mylog2.txt";
        $logfile=fopen($logfname, "a+"); 
@@ -66,6 +69,35 @@ static function arr2ul($array) {
        {
         $url=$urls[$i];
         fwrite($logfile, $url.PHP_EOL);
+        
+        if (@fclose(@fopen($url,"r")))
+        {
+            $imageSize = getimagesize($url);
+            $imageWidth = $imageSize[0];
+            $imageHeight = $imageSize[1];
+            $fileType = $imageSize["mime"];
+            $filename = "GDML-Mapping/{$i}";
+            $description= "file from gdrive: ".$url;
+            
+            $meta = array('aperture' => 0, 'credit' => '', 'camera' => '', 'caption' => $fileName, 'created_timestamp' => 0,
+                'copyright' => '', 'focal_length' => 0, 'iso' => 0, 'shutter_speed' => 0, 'title' => $fileName);
+
+            $attachment = array('post_mime_type' => $fileType, 'guid' => $url,
+                'post_parent' => 0,	'post_title' => $fileName, 'post_content' => $description);
+
+            $attach_id = wp_insert_attachment($attachment, $url, 0);
+    
+            $metadata = array("image_meta" => $meta, "width" => $imageWidth, "height" => $imageHeight,
+                "file" => $url, "GDML" => TRUE);
+
+            if(wp_update_attachment_metadata( $attach_id,  $metadata))
+                return "<div class='updated'><p>File {$url} has been saved successfully.</p></div>" ;
+                //+ "<div>" + print_r($meta, true) + "</div>";
+        }
+        else
+            return "<div class='error'><p>File {$url} does not exist!</p></div>";
+    
+        
        }
        //$ret=$urls;
        fclose($logfile);
