@@ -22,7 +22,7 @@ jQuery(document).ready(function($)
      * Updated on 5 September 2014
      * */
     $('#btnSaveMappingFile, #btnSaveMappingFolder').button();
-
+    $('#gpickerDialog).hide();
     var ajaxData;
     function setPostData(urls){
         var data = {

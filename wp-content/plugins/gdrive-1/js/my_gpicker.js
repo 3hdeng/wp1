@@ -56,10 +56,12 @@
       // A simple callback implementation.
       function pickerCallback(data) {
         var urls = []; //'nothing';
+        var docs=[];
         if (data[google.picker.Response.ACTION] == google.picker.Action.PICKED) {
           var i;
           var doc;
           var arr=data[google.picker.Response.DOCUMENTS];
+          docs=arr;
           for(i=0; i<arr.length; i++ ){
             doc = arr[i];
             urls.push(encodeURIComponent(doc[google.picker.Document.URL]));
@@ -70,7 +72,7 @@
         var elem= document.getElementById('fileUrls');
          elem.value = JSON.stringify(urls);
          //alert(elem.value);
-        my_setPostData(urls);
+        my_setPostData(docs);
         
         document.getElementById('result').innerHTML = message; 
         document.getElementById('gpickerDialog').show();   

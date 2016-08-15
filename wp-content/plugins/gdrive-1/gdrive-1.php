@@ -123,16 +123,17 @@ function gdml_ajax_cb()
         //      $tmp = stripslashes($tmp);
         //      }
         //$tmp = trim($tmp);
-        $urls=json_decode(stripslashes($tmp));
-        if($urls==null) fwrite($logfile, json_last_error_msg().PHP_EOL);
+        $docs=json_decode(stripslashes($tmp), true); //return array instead of object
+        if($docs==null) fwrite($logfile, json_last_error_msg().PHP_EOL);
         
-        fwrite($logfile, gettype($urls).PHP_EOL);
+        fwrite($logfile, gettype($docs).PHP_EOL);
 
-        for($i=0; $i< count($urls); $i++){
-            $urls[$i]=urldecode($urls[$i]);
-            fwrite($logfile, $urls[$i].PHP_EOL); 
+        for($i=0; $i< count($docs); $i++){
+            fwrite($logfile, gettype($docs[$i]).PHP_EOL);
+            //$docs[$i]=urldecode($docs[$i]);
+            //fwrite($logfile, $docs[$i].PHP_EOL); 
         }  
-        $message = $GDMLWebService->gdml_saveMappingFile($urls,
+        $message = $GDMLWebService->gdml_saveMappingFile($docs,
             $_POST['mappingFileNonce'], 'mapping-file-nonce');
         //echo $message;
         fwrite($logfile, $message.PHP_EOL); 

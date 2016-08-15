@@ -50,7 +50,7 @@ static function arr2ul($array) {
     * Created on 27 August 2014
     * Updated on 27 August 2014
     * */
-    function gdml_saveMappingFile($urls, $nonce, $nonceField)
+    function gdml_saveMappingFile($docs, $nonce, $nonceField)
     {
         try{
 //=== https://wordpress.org/support/topic/using-getimagesize-in-wordpress
@@ -61,22 +61,23 @@ static function arr2ul($array) {
        $logfile=fopen($logfname, "a+"); 
        //$urls to $url, $folder, $filename
        fwrite($logfile, "//=== {$logfname} , gdml_saveMappingFile()".PHP_EOL);
-        fwrite($logfile, gettype($urls).PHP_EOL);
+        fwrite($logfile, gettype($docs).PHP_EOL);
          fwrite($logfile,$nonce.PHP_EOL);
          fwrite($logfile,$nonceField.PHP_EOL); 
-         
-       for($i=0; $i< count($urls); $i++)
+        //=== gdrive file list() -->  get() 
+       for($i=0; $i< count($docs); $i++)
        {
-        $url=$urls[$i];
+        $doc=$docs[$i];
+        $url= $doc[google.picker.Document.EMBEDDABLE_URL];
         fwrite($logfile, $url.PHP_EOL);
-        
-        if (@fclose(@fopen($url,"r")))
-        {
-            $imageSize = getimagesize($url);
-            $imageWidth = $imageSize[0];
-            $imageHeight = $imageSize[1];
-            $fileType = $imageSize["mime"];
-            $filename = "GDML-Mapping/{$i}";
+        //if (@fclose(@fopen($url,"r")))
+        //{
+            $imageSize = 500;//getimagesize($url);
+            $imageWidth = 100; //$imageSize[0];
+            $imageHeight = 100; //$imageSize[1];
+            $fileType = $doc[google.picker.Document.MIME_TYPE];
+            $filename = "GDML-Mapping/".$doc[google.picker.Document.Name];
+            
             $description= "file from gdrive: ".$url;
             
             $meta = array('aperture' => 0, 'credit' => '', 'camera' => '', 'caption' => $fileName, 'created_timestamp' => 0,
@@ -93,9 +94,9 @@ static function arr2ul($array) {
             if(wp_update_attachment_metadata( $attach_id,  $metadata))
                 return "<div class='updated'><p>File {$url} has been saved successfully.</p></div>" ;
                 //+ "<div>" + print_r($meta, true) + "</div>";
-        }
-        else
-            return "<div class='error'><p>File {$url} does not exist!</p></div>";
+        //}
+        //else
+          //  return "<div class='error'><p>File {$url} does not exist!</p></div>";
     
         
        }
